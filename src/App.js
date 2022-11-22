@@ -76,6 +76,23 @@ function App() {
       location: addFormData.location,
     };
 
+    const jsonTodo = JSON.stringify({
+      title: newTodo.title,
+      description: newTodo.description,
+      date: newTodo.date,
+      location: newTodo.location,
+    });
+    console.log(`jsonTodo = ${jsonTodo}`);
+
+    axios
+      .post("http://localhost:8080/api/todo/save", jsonTodo, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+
     // console.log(`Formatted date: ${formattedDate}`);
 
     const newTodos = [...todos, newTodo];
@@ -202,7 +219,7 @@ function App() {
               />
               <Input
                 variant="outline"
-                type="datetime-local"
+                type="text"
                 name="date"
                 required="required"
                 placeholder="Enter a date..."

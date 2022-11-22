@@ -30,7 +30,7 @@ const EditableRow = ({
       </Td>
       <Td>
         <Input
-          type="datetime-local"
+          type="text"
           name="date"
           required="required"
           placeholder="Enter a date..."
