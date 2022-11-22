@@ -65,22 +65,11 @@ function App() {
     // here you should replace with sending a POST request to the API and remove the preventDefault() method call
     event.preventDefault();
 
-    // let dateString = String(addFormData.date);
-    // let formattedDate = dateString.replaceAll("-", ".").replaceAll("T", " ");
-
-    const newTodo = {
-      id: nanoid(),
+    const jsonTodo = JSON.stringify({
       title: addFormData.title,
       description: addFormData.description,
       date: addFormData.date,
       location: addFormData.location,
-    };
-
-    const jsonTodo = JSON.stringify({
-      title: newTodo.title,
-      description: newTodo.description,
-      date: newTodo.date,
-      location: newTodo.location,
     });
 
     axios
@@ -94,8 +83,6 @@ function App() {
       })
       .catch((err) => console.log(err));
     setUserInteraction(userInteraction * -1);
-    // const newTodos = [...todos, newTodo];
-    // setTodos(newTodos);
   };
 
   const handleEditFormSubmit = (event) => {
@@ -115,6 +102,7 @@ function App() {
 
     newTodos[index] = editedTodo;
 
+    // TODO
     setTodos(newTodos);
     setEditTodoId(null);
   };
@@ -139,16 +127,18 @@ function App() {
   };
 
   const handleDeleteClick = (todoId) => {
-    const newTodos = [...todos];
-
-    const index = todos.findIndex((todo) => todo.id === todoId);
-    newTodos.splice(index, 1);
-
-    setTodos(newTodos);
+    axios
+      .delete("http://localhost:8080/api/todo/delete", {
+        params: {
+          id: todoId,
+        },
+      })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+    setUserInteraction(userInteraction * -1);
   };
 
   // Fetching from database
-  const [probaTodo, setProbaTodo] = useState([]);
   useEffect(() => {
     axios
       .get("http://localhost:8080/api/todo/todoItems")
