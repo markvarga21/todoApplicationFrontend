@@ -1,10 +1,24 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, useEffect, Fragment } from "react";
+import axios from "axios";
 import "./App.css";
 // imitating api call
 import data from "./mock-data.json";
 import { nanoid } from "nanoid";
 import ReadOnlyRow from "./components/ReadOnlyRow";
 import EditableRow from "./components/EditableRow";
+import {
+  Button,
+  Input,
+  FormControl,
+  Heading,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  VStack,
+  Box,
+} from "@chakra-ui/react";
 
 function App() {
   const [todos, setTodos] = useState(data);
@@ -51,6 +65,9 @@ function App() {
     // here you should replace with sending a POST request to the API and remove the preventDefault() method call
     event.preventDefault();
 
+    // let dateString = String(addFormData.date);
+    // let formattedDate = dateString.replaceAll("-", ".").replaceAll("T", " ");
+
     const newTodo = {
       id: nanoid(),
       title: addFormData.title,
@@ -58,6 +75,8 @@ function App() {
       date: addFormData.date,
       location: addFormData.location,
     };
+
+    // console.log(`Formatted date: ${formattedDate}`);
 
     const newTodos = [...todos, newTodo];
     setTodos(newTodos);
@@ -112,20 +131,34 @@ function App() {
     setTodos(newTodos);
   };
 
+  // Fetching from database
+  const [probaTodo, setProbaTodo] = useState([]);
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/api/todo/todoItems")
+      .then((res) => {
+        setProbaTodo(res.data);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [todos]);
+
   return (
     <div className="app-container">
       <form onSubmit={handleEditFormSubmit}>
-        <table>
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Description</th>
-              <th>Date</th>
-              <th>Location</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table size="md" colorScheme="linkedin" variant="striped">
+          <Thead>
+            <Tr>
+              <Th>Title</Th>
+              <Th>Description</Th>
+              <Th>Date</Th>
+              <Th>Location</Th>
+              <Th>Action</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
             {todos.map((todo) => (
               <Fragment>
                 {editTodoId === todo.id ? (
@@ -143,40 +176,52 @@ function App() {
                 )}
               </Fragment>
             ))}
-          </tbody>
-        </table>
+          </Tbody>
+        </Table>
       </form>
-      <h2>Add a todo</h2>
       <form onSubmit={handleAddFormSubmit}>
-        <input
-          type="text"
-          name="title"
-          required="required"
-          placeholder="Enter a title..."
-          onChange={handleAddFormChange}
-        />
-        <input
-          type="text"
-          name="description"
-          required="required"
-          placeholder="Enter a description..."
-          onChange={handleAddFormChange}
-        />
-        <input
-          type="text"
-          name="date"
-          required="required"
-          placeholder="Enter a date..."
-          onChange={handleAddFormChange}
-        />
-        <input
-          type="text"
-          name="location"
-          required="required"
-          placeholder="Enter a location..."
-          onChange={handleAddFormChange}
-        />
-        <button type="submit">Add</button>
+        <VStack spacing={3} width={500} align="stretch">
+          <FormControl isRequired>
+            <Box p={5} shadow="2xl" borderRadius={8}>
+              <Heading>Add a todo</Heading>
+              <Input
+                variant="outline"
+                type="text"
+                name="title"
+                required="required"
+                placeholder="Enter a title..."
+                onChange={handleAddFormChange}
+              />
+              <Input
+                variant="outline"
+                type="text"
+                name="description"
+                required="required"
+                placeholder="Enter a description..."
+                onChange={handleAddFormChange}
+              />
+              <Input
+                variant="outline"
+                type="datetime-local"
+                name="date"
+                required="required"
+                placeholder="Enter a date..."
+                onChange={handleAddFormChange}
+              />
+              <Input
+                variant="outline"
+                type="text"
+                name="location"
+                required="required"
+                placeholder="Enter a location..."
+                onChange={handleAddFormChange}
+              />
+              <Button type="submit" colorScheme="blue">
+                Add
+              </Button>
+            </Box>
+          </FormControl>
+        </VStack>
       </form>
     </div>
   );

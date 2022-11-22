@@ -1,3 +1,4 @@
+import { Button, Input, Td, Tr } from "@chakra-ui/react";
 import React from "react";
 
 const EditableRow = ({
@@ -6,9 +7,9 @@ const EditableRow = ({
   handleCancelClick,
 }) => {
   return (
-    <tr>
-      <td>
-        <input
+    <Tr>
+      <Td>
+        <Input
           type="text"
           name="title"
           required="required"
@@ -16,9 +17,9 @@ const EditableRow = ({
           onChange={handleEditFormChange}
           value={editFormData.title}
         />
-      </td>
-      <td>
-        <input
+      </Td>
+      <Td>
+        <Input
           type="text"
           name="description"
           required="required"
@@ -26,19 +27,19 @@ const EditableRow = ({
           onChange={handleEditFormChange}
           value={editFormData.description}
         />
-      </td>
-      <td>
-        <input
-          type="text"
+      </Td>
+      <Td>
+        <Input
+          type="datetime-local"
           name="date"
           required="required"
           placeholder="Enter a date..."
           onChange={handleEditFormChange}
           value={editFormData.date}
         />
-      </td>
-      <td>
-        <input
+      </Td>
+      <Td>
+        <Input
           type="text"
           name="location"
           required="required"
@@ -46,14 +47,14 @@ const EditableRow = ({
           onChange={handleEditFormChange}
           value={editFormData.location}
         />
-      </td>
-      <td>
-        <button type="submit">Save</button>
-        <button type="button" onClick={handleCancelClick}>
+      </Td>
+      <Td>
+        <Button type="submit">Save</Button>
+        <Button type="button" onClick={handleCancelClick}>
           Cancel
-        </button>
-      </td>
-    </tr>
+        </Button>
+      </Td>
+    </Tr>
   );
 };
 
