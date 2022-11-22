@@ -87,23 +87,23 @@ function App() {
 
   const handleEditFormSubmit = (event) => {
     event.preventDefault();
-
-    const editedTodo = {
-      id: editTodoId,
+    const jsonTodo = JSON.stringify({
       title: editFormData.title,
       description: editFormData.description,
       date: editFormData.date,
       location: editFormData.location,
-    };
+    });
 
-    const newTodos = [...todos];
+    axios
+      .put(`http://localhost:8080/api/todo/update?id=${editTodoId}`, jsonTodo, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
 
-    const index = todos.findIndex((todo) => todo.id === editTodoId);
-
-    newTodos[index] = editedTodo;
-
-    // TODO
-    setTodos(newTodos);
+    setUserInteraction(userInteraction * -1);
     setEditTodoId(null);
   };
 
