@@ -2,7 +2,6 @@ import React, { useState, useEffect, Fragment } from "react";
 import axios from "axios";
 import "./App.css";
 // imitating api call
-import data from "./mock-data.json";
 import { nanoid } from "nanoid";
 import ReadOnlyRow from "./components/ReadOnlyRow";
 import EditableRow from "./components/EditableRow";
@@ -21,7 +20,8 @@ import {
 } from "@chakra-ui/react";
 
 function App() {
-  const [todos, setTodos] = useState(data);
+  const [userInteraction, setUserInteraction] = useState(-1);
+  const [todos, setTodos] = useState([]);
   const [addFormData, setAddFormData] = useState({
     title: "",
     description: "",
@@ -82,7 +82,6 @@ function App() {
       date: newTodo.date,
       location: newTodo.location,
     });
-    console.log(`jsonTodo = ${jsonTodo}`);
 
     axios
       .post("http://localhost:8080/api/todo/save", jsonTodo, {
@@ -90,13 +89,13 @@ function App() {
           "Content-Type": "application/json",
         },
       })
-      .then((res) => console.log(res))
+      .then((res) => {
+        console.log(`Recently added data: ${res.data}`);
+      })
       .catch((err) => console.log(err));
-
-    // console.log(`Formatted date: ${formattedDate}`);
-
-    const newTodos = [...todos, newTodo];
-    setTodos(newTodos);
+    setUserInteraction(userInteraction * -1);
+    // const newTodos = [...todos, newTodo];
+    // setTodos(newTodos);
   };
 
   const handleEditFormSubmit = (event) => {
@@ -154,13 +153,15 @@ function App() {
     axios
       .get("http://localhost:8080/api/todo/todoItems")
       .then((res) => {
-        setProbaTodo(res.data);
-        console.log(res.data);
+        setTodos(res.data);
+        console.log(
+          `Refreshing data, because submit was pressed!\nData: ${res.data}`
+        );
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [todos]);
+  }, [userInteraction]);
 
   return (
     <div className="app-container">
