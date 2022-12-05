@@ -6,6 +6,7 @@ import { ChakraProvider, HStack } from "@chakra-ui/react";
 import TodoItem from "./components/TodoItem";
 import TodoItemList from "./components/TodoItemList";
 import TodoForm from "./components/TodoForm";
+import EditableTodoitem from "./components/EditableTodoitem";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -46,10 +47,11 @@ root.render(
   <ChakraProvider>
     <React.StrictMode>
       {/* <App /> */}
-      <HStack spacing={250}>
+      {/* <HStack spacing={250}>
         <TodoItemList todos={todos} />
         <TodoForm />
-      </HStack>
+      </HStack> */}
+      <EditableTodoitem />
     </React.StrictMode>
   </ChakraProvider>
 );
