@@ -6,6 +6,8 @@ import {
   HStack,
   Image,
   Input,
+  Button,
+  Flex,
 } from "@chakra-ui/react";
 import locationIcon from "../resources/location.svg";
 import dateTimeIcon from "../resources/dateTime.svg";
@@ -81,6 +83,16 @@ const EditableTodoitem = () => {
             />
           </Text>
         </HStack>
+      </Box>
+      <Box>
+        <Flex gap={30} p={2} justifyContent="center">
+          <Button colorScheme="blue" variant="outline">
+            Save
+          </Button>
+          <Button colorScheme="red" variant="outline">
+            Cancel
+          </Button>
+        </Flex>
       </Box>
     </Box>
   );
