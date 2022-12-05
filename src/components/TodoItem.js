@@ -1,17 +1,13 @@
-import { useState } from "react";
 import {
   Box,
   Heading,
   Text,
-  Img,
-  Flex,
-  Center,
   useColorModeValue,
   HStack,
   Image,
-  Divider,
 } from "@chakra-ui/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import locationIcon from "../resources/location.svg";
+import dateTimeIcon from "../resources/dateTime.svg";
 
 const TodoItem = ({ todo }) => {
   return (
@@ -46,10 +42,15 @@ const TodoItem = ({ todo }) => {
           {todo.description}
         </Text>
         <Box>
-          <FontAwesomeIcon icon="fa-solid fa-location-pin" />
-          <Text color={"gray.500"}>{todo.location}</Text>
+          <HStack>
+            <Image src={locationIcon} width={3} />
+            <Text color={"gray.500"}>{todo.location}</Text>
+          </HStack>
         </Box>
-        <Text color={"gray.500"}>{todo.date}</Text>
+        <HStack>
+          <Image src={dateTimeIcon} width={3} />
+          <Text color={"gray.500"}>{todo.date}</Text>
+        </HStack>
       </Box>
     </Box>
   );
