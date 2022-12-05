@@ -47,11 +47,11 @@ root.render(
   <ChakraProvider>
     <React.StrictMode>
       {/* <App /> */}
-      {/* <HStack spacing={250}>
+      <HStack spacing={250}>
         <TodoItemList todos={todos} />
         <TodoForm />
-      </HStack> */}
-      <EditableTodoitem />
+      </HStack>
+      {/* <EditableTodoitem /> */}
     </React.StrictMode>
   </ChakraProvider>
 );

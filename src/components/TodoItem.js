@@ -5,6 +5,8 @@ import {
   useColorModeValue,
   HStack,
   Image,
+  Flex,
+  Button,
 } from "@chakra-ui/react";
 import locationIcon from "../resources/location.svg";
 import dateTimeIcon from "../resources/dateTime.svg";
@@ -51,6 +53,16 @@ const TodoItem = ({ todo }) => {
           <Image src={dateTimeIcon} width={3} />
           <Text color={"gray.500"}>{todo.date}</Text>
         </HStack>
+      </Box>
+      <Box>
+        <Flex gap={30} p={2} justifyContent="center">
+          <Button colorScheme="blue" variant="outline">
+            Edit
+          </Button>
+          <Button colorScheme="red" variant="outline">
+            Delete
+          </Button>
+        </Flex>
       </Box>
     </Box>
   );
