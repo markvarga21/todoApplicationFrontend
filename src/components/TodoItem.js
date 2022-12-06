@@ -11,7 +11,7 @@ import {
 import locationIcon from "../resources/location.svg";
 import dateTimeIcon from "../resources/dateTime.svg";
 
-const TodoItem = ({ todo }) => {
+const TodoItem = ({ todo, handleEditClick, handleDeleteClick }) => {
   return (
     <Box
       w="xs"
@@ -56,10 +56,18 @@ const TodoItem = ({ todo }) => {
       </Box>
       <Box>
         <Flex gap={30} p={2} justifyContent="center">
-          <Button colorScheme="blue" variant="outline">
+          <Button
+            colorScheme="blue"
+            variant="outline"
+            onClick={(event) => handleEditClick(event, todo)}
+          >
             Edit
           </Button>
-          <Button colorScheme="red" variant="outline">
+          <Button
+            colorScheme="red"
+            variant="outline"
+            onClick={() => handleDeleteClick(todo.id)}
+          >
             Delete
           </Button>
         </Flex>

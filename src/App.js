@@ -1,23 +1,10 @@
 import React, { useState, useEffect, Fragment } from "react";
 import axios from "axios";
 import "./App.css";
-// imitating api call
-import { nanoid } from "nanoid";
-import ReadOnlyRow from "./components/ReadOnlyRow";
-import EditableRow from "./components/EditableRow";
-import {
-  Button,
-  Input,
-  FormControl,
-  Heading,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  VStack,
-  Box,
-} from "@chakra-ui/react";
+import { Box, HStack } from "@chakra-ui/react";
+import TodoForm from "./components/TodoForm";
+import TodoItem from "./components/TodoItem";
+import EditableTodoitem from "./components/EditableTodoitem";
 
 function App() {
   const [userInteraction, setUserInteraction] = useState(-1);
@@ -155,28 +142,34 @@ function App() {
 
   return (
     <div className="app-container">
-      <form onSubmit={handleEditFormSubmit}>
-        <Table size="md" colorScheme="linkedin" variant="striped">
-          <Thead>
-            <Tr>
-              <Th>Title</Th>
-              <Th>Description</Th>
-              <Th>Date</Th>
-              <Th>Location</Th>
-              <Th>Action</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
+      <HStack spacing={250}>
+        <form onSubmit={handleEditFormSubmit}>
+          <Box
+            width={400}
+            height={880}
+            display="block"
+            overflowY="scroll"
+            sx={{
+              "&::-webkit-scrollbar": {
+                width: "16px",
+                borderRadius: "5px",
+                backgroundColor: `rgba(0, 0, 0, 0.05)`,
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: `rgba(0, 0, 0, 0.05)`,
+              },
+            }}
+          >
             {todos.map((todo) => (
               <Fragment>
                 {editTodoId === todo.id ? (
-                  <EditableRow
+                  <EditableTodoitem
                     editFormData={editFormData}
                     handleEditFormChange={handleEditFormChange}
                     handleCancelClick={handleCancelClick}
                   />
                 ) : (
-                  <ReadOnlyRow
+                  <TodoItem
                     todo={todo}
                     handleEditClick={handleEditClick}
                     handleDeleteClick={handleDeleteClick}
@@ -184,53 +177,13 @@ function App() {
                 )}
               </Fragment>
             ))}
-          </Tbody>
-        </Table>
-      </form>
-      <form onSubmit={handleAddFormSubmit}>
-        <VStack spacing={3} width={500} align="stretch">
-          <FormControl isRequired>
-            <Box p={5} shadow="2xl" borderRadius={8}>
-              <Heading>Add a todo</Heading>
-              <Input
-                variant="outline"
-                type="text"
-                name="title"
-                required="required"
-                placeholder="Enter a title..."
-                onChange={handleAddFormChange}
-              />
-              <Input
-                variant="outline"
-                type="text"
-                name="description"
-                required="required"
-                placeholder="Enter a description..."
-                onChange={handleAddFormChange}
-              />
-              <Input
-                variant="outline"
-                type="text"
-                name="date"
-                required="required"
-                placeholder="Enter a date..."
-                onChange={handleAddFormChange}
-              />
-              <Input
-                variant="outline"
-                type="text"
-                name="location"
-                required="required"
-                placeholder="Enter a location..."
-                onChange={handleAddFormChange}
-              />
-              <Button type="submit" colorScheme="blue">
-                Add
-              </Button>
-            </Box>
-          </FormControl>
-        </VStack>
-      </form>
+          </Box>
+        </form>
+        <TodoForm
+          handleAddFormChange={handleAddFormChange}
+          handleAddFormSubmit={handleAddFormSubmit}
+        />
+      </HStack>
     </div>
   );
 }
