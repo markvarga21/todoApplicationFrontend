@@ -5,8 +5,8 @@ import App from "./App";
 import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import About from "./components/About";
 import Login from "./components/Login";
+import Logout from "./components/Logout";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -17,7 +17,7 @@ root.render(
         <Navbar />
         <Routes>
           <Route path="/" element={<App />} />
-          <Route path="/about" element={<About />} />
+          <Route path="/logout" element={<Logout />} />
           <Route path="/login" element={<Login />} />
         </Routes>
       </BrowserRouter>
