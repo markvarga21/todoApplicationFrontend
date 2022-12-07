@@ -10,11 +10,13 @@ import {
   Heading,
   Text,
   useColorModeValue,
+  HStack,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const Login = ({ setUserDetails, userDetails }) => {
+const Login = ({ setAccessToken, accessToken }) => {
+  const navigate = useNavigate();
   const handleLoginSubmit = (event) => {
     event.preventDefault();
     const username = event.target.username.value;
@@ -30,21 +32,18 @@ const Login = ({ setUserDetails, userDetails }) => {
         },
       })
       .then((res) => {
-        setUserDetails({ username: username, accessToken: res.data });
-        loadHomePage();
+        const token = res.data;
+        setAccessToken(token);
+        if (token !== "") {
+          console.log("Navigating to home page");
+          navigate("/");
+        } else {
+          navigate("/login");
+        }
       })
       .then((err) => console.error(err));
   };
 
-  const navigate = useNavigate();
-
-  const loadHomePage = () => {
-    if (userDetails.accessToken !== "") {
-      navigate("/");
-    } else {
-      navigate("/login");
-    }
-  };
   return (
     <form onSubmit={handleLoginSubmit}>
       <Flex
@@ -87,6 +86,14 @@ const Login = ({ setUserDetails, userDetails }) => {
                   Sign in
                 </Button>
               </Stack>
+              <Box>
+                <HStack>
+                  <Text>New here?</Text>
+                  <Link to="/register">
+                    <Text color="blue.400">Register!</Text>
+                  </Link>
+                </HStack>
+              </Box>
             </Stack>
           </Box>
         </Stack>

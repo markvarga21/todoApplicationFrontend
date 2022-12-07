@@ -9,10 +9,7 @@ import Login from "./components/Login";
 import Logout from "./components/Logout";
 
 function App() {
-  const [userDetails, setUserDetails] = useState({
-    username: "",
-    accessToken: "",
-  });
+  const [accessToken, setAccessToken] = useState("");
   const [userInteraction, setUserInteraction] = useState(-1);
   const [todos, setTodos] = useState([]);
   const [addFormData, setAddFormData] = useState({
@@ -66,15 +63,14 @@ function App() {
     });
 
     console.log(
-      `Access token exists ${userDetails.accessToken !== ""} and is: ${
-        userDetails.accessToken
-      }`
+      `Access token is empty ${accessToken === ""} and is: ${accessToken}`
     );
 
     axios
       .post("http://localhost:8080/api/todo/save", jsonTodo, {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
       })
       .then((res) => {
@@ -97,6 +93,7 @@ function App() {
       .put(`http://localhost:8080/api/todo/update?id=${editTodoId}`, jsonTodo, {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
       })
       .then((res) => console.log(res))
@@ -131,6 +128,9 @@ function App() {
         params: {
           id: todoId,
         },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       })
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
@@ -140,7 +140,11 @@ function App() {
   // Fetching from database
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/todo/todoItems")
+      .get("http://localhost:8080/api/todo/todoItems", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
       .then((res) => {
         setTodos(res.data);
         console.log(
@@ -150,28 +154,35 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
-  }, [userInteraction]);
+  }, [userInteraction, accessToken]);
 
   return (
     <div className="app-container">
       <BrowserRouter>
-        <Navbar setUserDetails={setUserDetails} />
+        <Navbar setAccessToken={setAccessToken} />
         <Routes>
           <Route
             path="/"
             element={
-              <TodoApplication
-                handleEditFormSubmit={handleEditFormSubmit}
-                editFormData={editFormData}
-                handleEditFormChange={handleEditFormChange}
-                handleCancelClick={handleCancelClick}
-                todos={todos}
-                handleEditClick={handleEditClick}
-                handleDeleteClick={handleDeleteClick}
-                handleAddFormChange={handleAddFormChange}
-                handleAddFormSubmit={handleAddFormSubmit}
-                editTodoId={editTodoId}
-              />
+              accessToken ? (
+                <TodoApplication
+                  handleEditFormSubmit={handleEditFormSubmit}
+                  editFormData={editFormData}
+                  handleEditFormChange={handleEditFormChange}
+                  handleCancelClick={handleCancelClick}
+                  todos={todos}
+                  handleEditClick={handleEditClick}
+                  handleDeleteClick={handleDeleteClick}
+                  handleAddFormChange={handleAddFormChange}
+                  handleAddFormSubmit={handleAddFormSubmit}
+                  editTodoId={editTodoId}
+                />
+              ) : (
+                <Login
+                  setAccessToken={setAccessToken}
+                  accessToken={accessToken}
+                />
+              )
             }
           />
           <Route path="/register" element={<Register />} />
@@ -180,8 +191,8 @@ function App() {
             path="/login"
             element={
               <Login
-                setUserDetails={setUserDetails}
-                userDetails={userDetails}
+                setAccessToken={setAccessToken}
+                accessToken={accessToken}
               />
             }
           />

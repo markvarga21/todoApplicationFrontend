@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -82,6 +83,14 @@ const Register = () => {
                 Sign up
               </Button>
             </Stack>
+            <Box>
+              <HStack>
+                <Text>Already a member?</Text>
+                <Link to="/login">
+                  <Text color="blue.400">Login!</Text>
+                </Link>
+              </HStack>
+            </Box>
           </Stack>
         </Box>
       </Stack>

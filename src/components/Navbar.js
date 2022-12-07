@@ -2,9 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../styles.css";
 
-const Navbar = ({ setUserDetails }) => {
+const Navbar = ({ setAccessToken }) => {
   const logoutUser = () => {
-    setUserDetails({ username: "", accessToken: "" });
+    setAccessToken("");
     console.log("User logged out!");
   };
   return (
