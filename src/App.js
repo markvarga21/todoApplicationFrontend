@@ -1,12 +1,16 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
-import { Box, HStack } from "@chakra-ui/react";
-import TodoForm from "./components/TodoForm";
-import TodoItem from "./components/TodoItem";
-import EditableTodoitem from "./components/EditableTodoitem";
+import TodoApplication from "./components/TodoApplication";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Register from "./components/Register";
+import Login from "./components/Login";
+import Logout from "./components/Logout";
 
 function App() {
+  const [accessToken, setAccessToken] = useState("");
+  const [userErrorMessage, setUserErrorMessage] = useState("");
   const [userInteraction, setUserInteraction] = useState(-1);
   const [todos, setTodos] = useState([]);
   const [addFormData, setAddFormData] = useState({
@@ -59,16 +63,27 @@ function App() {
       location: addFormData.location,
     });
 
+    console.log(
+      `Access token is empty ${accessToken === ""} and is: ${accessToken}`
+    );
+
     axios
       .post("http://localhost:8080/api/todo/save", jsonTodo, {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
       })
       .then((res) => {
         console.log(`Recently added data: ${res.data}`);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        const code = err.response.status;
+        if (code === 401) {
+          setUserErrorMessage("Login expired! Please log in again.");
+          alert("Login expired! Please log in again.t");
+        }
+      });
     setUserInteraction(userInteraction * -1);
   };
 
@@ -85,6 +100,7 @@ function App() {
       .put(`http://localhost:8080/api/todo/update?id=${editTodoId}`, jsonTodo, {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
       })
       .then((res) => console.log(res))
@@ -119,6 +135,9 @@ function App() {
         params: {
           id: todoId,
         },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       })
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
@@ -128,7 +147,11 @@ function App() {
   // Fetching from database
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/todo/todoItems")
+      .get("http://localhost:8080/api/todo/todoItems", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
       .then((res) => {
         setTodos(res.data);
         console.log(
@@ -138,52 +161,52 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
-  }, [userInteraction]);
+  }, [userInteraction, accessToken]);
 
   return (
     <div className="app-container">
-      <HStack spacing={250}>
-        <form onSubmit={handleEditFormSubmit}>
-          <Box
-            width={400}
-            height={880}
-            display="block"
-            overflowY="scroll"
-            sx={{
-              "&::-webkit-scrollbar": {
-                width: "16px",
-                borderRadius: "5px",
-                backgroundColor: `rgba(0, 0, 0, 0.05)`,
-              },
-              "&::-webkit-scrollbar-thumb": {
-                backgroundColor: `rgba(0, 0, 0, 0.05)`,
-              },
-            }}
-          >
-            {todos.map((todo) => (
-              <Fragment>
-                {editTodoId === todo.id ? (
-                  <EditableTodoitem
-                    editFormData={editFormData}
-                    handleEditFormChange={handleEditFormChange}
-                    handleCancelClick={handleCancelClick}
-                  />
-                ) : (
-                  <TodoItem
-                    todo={todo}
-                    handleEditClick={handleEditClick}
-                    handleDeleteClick={handleDeleteClick}
-                  />
-                )}
-              </Fragment>
-            ))}
-          </Box>
-        </form>
-        <TodoForm
-          handleAddFormChange={handleAddFormChange}
-          handleAddFormSubmit={handleAddFormSubmit}
-        />
-      </HStack>
+      <BrowserRouter>
+        <Navbar setAccessToken={setAccessToken} />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              accessToken ? (
+                <TodoApplication
+                  handleEditFormSubmit={handleEditFormSubmit}
+                  editFormData={editFormData}
+                  handleEditFormChange={handleEditFormChange}
+                  handleCancelClick={handleCancelClick}
+                  todos={todos}
+                  handleEditClick={handleEditClick}
+                  handleDeleteClick={handleDeleteClick}
+                  handleAddFormChange={handleAddFormChange}
+                  handleAddFormSubmit={handleAddFormSubmit}
+                  editTodoId={editTodoId}
+                />
+              ) : (
+                <Login
+                  setAccessToken={setAccessToken}
+                  accessToken={accessToken}
+                />
+              )
+            }
+          />
+          <Route path="/register" element={<Register />} />
+          <Route path="/logout" element={<Logout />} />
+          <Route
+            path="/login"
+            element={
+              <Login
+                setAccessToken={setAccessToken}
+                accessToken={accessToken}
+                userErrorMessage={userErrorMessage}
+                setUserErrorMessage={setUserErrorMessage}
+              />
+            }
+          />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
