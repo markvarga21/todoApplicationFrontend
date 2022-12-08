@@ -15,7 +15,12 @@ import {
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
-const Login = ({ setAccessToken, accessToken }) => {
+const Login = ({
+  setAccessToken,
+  accessToken,
+  userErrorMessage,
+  setUserErrorMessage,
+}) => {
   const navigate = useNavigate();
   const handleLoginSubmit = (event) => {
     event.preventDefault();
@@ -36,12 +41,19 @@ const Login = ({ setAccessToken, accessToken }) => {
         setAccessToken(token);
         if (token !== "") {
           console.log("Navigating to home page");
+          setUserErrorMessage("");
           navigate("/");
         } else {
           navigate("/login");
         }
       })
-      .then((err) => console.error(err));
+      .then((err) => console.error(err))
+      .catch((err) => {
+        const error_code = err.code;
+        if (error_code === "ERR_BAD_REQUEST") {
+          setUserErrorMessage("Login failed, due to incorrect credentials!");
+        }
+      });
   };
 
   return (
@@ -66,6 +78,16 @@ const Login = ({ setAccessToken, accessToken }) => {
             p={8}
           >
             <Stack spacing={4}>
+              {userErrorMessage === "" ? (
+                <></>
+              ) : (
+                <Box>
+                  <HStack>
+                    <Text color="red.400">{userErrorMessage}</Text>
+                  </HStack>
+                </Box>
+              )}
+
               <FormControl id="username">
                 <FormLabel>Username</FormLabel>
                 <Input type="text" name="username" />

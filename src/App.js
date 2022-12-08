@@ -10,6 +10,7 @@ import Logout from "./components/Logout";
 
 function App() {
   const [accessToken, setAccessToken] = useState("");
+  const [userErrorMessage, setUserErrorMessage] = useState("");
   const [userInteraction, setUserInteraction] = useState(-1);
   const [todos, setTodos] = useState([]);
   const [addFormData, setAddFormData] = useState({
@@ -76,7 +77,13 @@ function App() {
       .then((res) => {
         console.log(`Recently added data: ${res.data}`);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        const code = err.response.status;
+        if (code === 401) {
+          setUserErrorMessage("Login expired! Please log in again.");
+          alert("Login expired! Please log in again.t");
+        }
+      });
     setUserInteraction(userInteraction * -1);
   };
 
@@ -193,6 +200,8 @@ function App() {
               <Login
                 setAccessToken={setAccessToken}
                 accessToken={accessToken}
+                userErrorMessage={userErrorMessage}
+                setUserErrorMessage={setUserErrorMessage}
               />
             }
           />
