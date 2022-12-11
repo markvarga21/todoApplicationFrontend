@@ -4,6 +4,7 @@
 
 body {
   margin: 0;
+  overflow: hidden;
 }
 
 .home-title {
@@ -43,4 +44,10 @@ body {
 
 .nav li.active:hover {
   background-color: #777;
+}
+
+.todoApplication {
+  background-image: url("../public/backgroundImage.png");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
