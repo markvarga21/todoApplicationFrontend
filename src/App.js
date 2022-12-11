@@ -55,11 +55,16 @@ function App() {
   const handleAddFormSubmit = (event) => {
     // here you should replace with sending a POST request to the API and remove the preventDefault() method call
     event.preventDefault();
+    setUserInteraction(Math.random());
+
+    const dateString = String(addFormData.date)
+      .replace("T", " ")
+      .replaceAll("-", ".");
 
     const jsonTodo = JSON.stringify({
       title: addFormData.title,
       description: addFormData.description,
-      date: addFormData.date,
+      date: dateString,
       location: addFormData.location,
     });
 
@@ -84,7 +89,6 @@ function App() {
           alert("Login expired! Please log in again.t");
         }
       });
-    setUserInteraction(userInteraction * -1);
   };
 
   const handleEditFormSubmit = (event) => {
@@ -161,7 +165,7 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
-  }, [userInteraction, accessToken]);
+  });
 
   return (
     <div className="app-container">

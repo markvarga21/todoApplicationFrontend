@@ -9,6 +9,10 @@ import {
 import React from "react";
 
 const TodoForm = ({ handleAddFormChange, handleAddFormSubmit }) => {
+  const dateChange = (event) => {
+    event.preventDefault();
+    console.log(event);
+  };
   return (
     <form onSubmit={handleAddFormSubmit}>
       <VStack spacing={3} width={500} align="stretch">
@@ -33,7 +37,7 @@ const TodoForm = ({ handleAddFormChange, handleAddFormSubmit }) => {
             />
             <Input
               variant="outline"
-              type="text"
+              type="datetime-local"
               name="date"
               required="required"
               placeholder="Enter a date..."
