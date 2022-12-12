@@ -10,10 +10,6 @@ import {
 import React from "react";
 
 const TodoForm = ({ handleAddFormChange, handleAddFormSubmit }) => {
-  const submitClicked = (event) => {
-    event.preventDefault();
-    console.log("Submit clicked!");
-  };
   return (
     <form onSubmit={handleAddFormSubmit}>
       <VStack spacing={3} width={500} align="stretch">

@@ -9,7 +9,6 @@ import Login from "./components/Login";
 import Logout from "./components/Logout";
 
 function App() {
-  let CHANGED = -1;
   const [accessToken, setAccessToken] = useState("");
   const [userErrorMessage, setUserErrorMessage] = useState("");
   const [userInteraction, setUserInteraction] = useState(-1);
@@ -86,7 +85,7 @@ function App() {
         const code = err.response.status;
         if (code === 401) {
           setUserErrorMessage("Login expired! Please log in again.");
-          alert("Login expired! Please log in again.t");
+          alert("Login expired! Please log in again.");
           setAccessToken("");
         }
       });
@@ -108,11 +107,12 @@ function App() {
           Authorization: `Bearer ${accessToken}`,
         },
       })
-      .then((res) => console.log(res))
+      .then((res) => {
+        console.log(res);
+        setUserInteraction(userInteraction * Math.random());
+        setEditTodoId(null);
+      })
       .catch((err) => console.log(err));
-
-    setUserInteraction(userInteraction * Math.random());
-    setEditTodoId(null);
   };
 
   const [editTodoId, setEditTodoId] = useState(null);
@@ -144,12 +144,13 @@ function App() {
           Authorization: `Bearer ${accessToken}`,
         },
       })
-      .then((res) => console.log(res))
+      .then((res) => {
+        console.log(res);
+      })
       .catch((err) => console.log(err));
     setUserInteraction(userInteraction * Math.random());
   };
 
-  // Fetching from database
   useEffect(() => {
     axios
       .get("http://localhost:8080/api/todo/todoItems", {
@@ -166,7 +167,7 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
-  }, [userInteraction]);
+  }, [userInteraction, accessToken]);
 
   return (
     <div className="app-container">
