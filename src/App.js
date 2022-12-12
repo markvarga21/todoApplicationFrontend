@@ -53,7 +53,6 @@ function App() {
   };
 
   const handleAddFormSubmit = (event) => {
-    // here you should replace with sending a POST request to the API and remove the preventDefault() method call
     event.preventDefault();
     const dateString = String(addFormData.date)
       .replace("T", " ")
